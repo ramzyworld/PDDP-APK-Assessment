@@ -1,0 +1,146 @@
+2. SECURITY REPORT ON PDDP.apk
+
+
+2.1 Introduction
+
+As part of my internship task, I performed a basic security assessment of the "PDDP.apk" Android application. The assessment was mainly focused on examining the contents of the APK, checking the Android Manifest, and decompiling the application to understand its structure and configuration.
+
+The assessment was performed using Kali Linux and tools such as "Unzip, Apktool, and JADX"
+
+
+2.2 File Information
+
+The file assessed was:
+
+File name: "PDDP.apk"
+Application name: PDDP
+Package name: "com.deeprf.pddp"
+Version: 1.0.0
+Minimum Android version: Android 5.0 (API 21)
+Target SDK: 35
+Application framework: Flutter
+
+
+2.3 Assessment Activities
+
+I carried out the following activities during the assessment:
+
+1. Inspected the APK file.
+2. Unzipped the APK to view its internal files and folders.
+3. Examined the "AndroidManifest.xml" file.
+4. Used JADX to decompile the APK.
+5. Examined the decompiled source code and application resources.
+6. Created separate GitHub branches for the unzipped APK contents and the JADX decompiled project.
+
+The unzipping process showed that the APK contained files and folders such as:
+
+"AndroidManifest.xml"
+"classes.dex"
+"assets"
+"lib"
+"META-INF"
+"res"
+"resources.arsc"
+Kotlin-related files
+Smali code
+
+
+2.4 Security Observations
+
+
+1. Internet Permission
+
+The application requests the following permission:
+
+"android.permission.INTERNET"
+
+This allows the application to communicate over the network.
+
+The permission itself is not a vulnerability, but it means that the application's network communication should be examined further.
+
+
+2. Cleartext Traffic is Allowed
+
+One important configuration found in the Manifest was:
+
+android:usesCleartextTraffic="true"
+
+This means that the application configuration allows cleartext network traffic.
+
+Cleartext communication can expose information if sensitive data is sent using unencrypted HTTP connections. Therefore, the application's network connections should be checked to confirm whether HTTP is actually being used.
+
+
+3. Main Activity is Exported
+
+The main activity was identified as:
+
+"com.deeprf.pddp.MainActivity"
+
+It contains:
+
+android:exported="true"
+
+This means that the activity is configured to be accessible from outside the application.
+
+This setting is not automatically a vulnerability. However, exported activities should be checked to ensure that they do not accept sensitive or untrusted input without proper validation.
+
+
+4. Decompiled Source Code
+
+Using JADX, I was able to decompile the APK and obtain readable source files.
+
+The decompiled project contained:
+
+sources
+resources
+
+JADX reported 10 errors during the decompilation process. However, it still successfully generated a large amount of readable source code and resources.
+
+This allowed me to inspect the internal structure of the application more easily.
+
+
+5. APK Structure
+
+The APK was successfully extracted and its internal structure was examined.
+
+The extracted files included application resources, compiled code, configuration files, native libraries and metadata. This showed that an APK is essentially a packaged collection of different application components rather than a single file that cannot be inspected.
+
+
+2.5 Security Assessment Summary
+
+Based on my practical assessment, I identified some configurations that require further security investigation.
+
+| Observation                              | Result                |
+| ---------------------------------------- | --------------------- |
+| INTERNET permission                      | Found                 |
+| Cleartext traffic allowed                | Found                 |
+| Main activity exported                   | Found                 |
+| APK contents accessible after extraction | Confirmed             |
+| Decompiled source code                   | Successfully obtained |
+| JADX decompilation errors                | 10 errors reported    |
+| Application framework                    | Flutter               |
+
+The most important observation from the initial assessment was that "cleartext traffic is allowed" through the application configuration. Further testing would be required to determine whether the application actually sends sensitive information over unencrypted connections.
+
+The exported main activity also requires further review to determine whether it can be abused through improper input or other application logic issues.
+
+2.6 Recommendations
+
+Based on the observations made, I recommend the following:
+
+1. Use HTTPS for all sensitive network communication.
+2. Disable cleartext traffic unless there is a specific reason for using it.
+3. Review all exported Android components and restrict them where possible.
+4. Review the source code for hardcoded passwords, API keys, tokens and other sensitive information.
+5. Review how sensitive information is stored within the application.
+6. Perform further dynamic testing to observe the application's actual network communication and behavior.
+7. Repeat the decompilation using additional tools where necessary to investigate the areas that JADX could not fully decompile.
+
+
+2.7 Conclusion
+
+The assessment showed that "PDDP.apk" could be successfully extracted and decompiled for security inspection. I was able to examine the application's structure, Manifest, permissions and configuration.
+
+The assessment identified "Internet access, cleartext traffic being allowed, and an exported main activity" as areas requiring further security review.
+
+The initial assessment provides a foundation for carrying out deeper static and dynamic analysis of the application.
